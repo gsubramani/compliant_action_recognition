@@ -1,0 +1,9 @@
+[submodule "bagfile_io"]
+	path = bagfile_io
+	url = git@github.com:gsubramani/bagfile_io.git
+[submodule "signal_database"]
+	path = signal_database
+	url = git@github.com:gsubramani/signal_database.git
+[submodule "SignalRecognition"]
+	path = SignalRecognition
+	url = git@github.com:gsubramani/SignalRecognition.git
