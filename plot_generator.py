@@ -51,34 +51,6 @@ def plotlabelpositions(array,timestamps):
 
 
 
-# def plotResult_colorbar_legend(timestamps,ax = None,labelNames = [],time_ticks = False):
-#
-#
-#     if ax is None:
-#         ax = plt.gca()
-#
-#
-#     print labelNames
-#     color_map_rgba = matplotlib.cm.ScalarMappable(cmap=color_map).to_rgba(range(len(labelNames)))
-#     ax.set_ylim([-0.25, 0.25])
-#     ax.get_yaxis().set_visible(False)
-#
-#     ax.get_xaxis().set_visible(time_ticks)
-#
-#     width_color_label = (timestamps[-1] - timestamps[0])/float(len(labelNames))
-#     starts = [ii*width_color_label for ii , _ in enumerate(labelNames)]
-#     stops = [(ii + 1) * width_color_label for ii, _ in enumerate(labelNames)]
-#     print starts
-#     print stops
-#     for start,stop,label in zip(starts,stops,labelNames):
-#         color = color_map_rgba[labelNames.index(label)]
-#         ax.axvspan(start, stop, alpha=1, color=color)
-#         ax.axvline(start,linewidth=1, color='k')
-#         label = label.replace("_","\n")
-#         plt.text((start + stop)/2.0, 0, label,horizontalalignment='center',verticalalignment='center')
-#     return ax
-
-
 def get_color_map(labelNames):
     color_map_rgba = matplotlib.cm.ScalarMappable(cmap=color_map).to_rgba(range(len(labelNames)))
     color_map_rgba[labelNames.index('')] = [1,1,1,1]
