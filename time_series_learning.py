@@ -129,6 +129,21 @@ def LSTM_model(data_dim, timesteps, batch_size, num_classes, stateful=False,
                        sample_weight_mode=sample_weight_mode)
     return model_LSTM
 
+def MLP_model(data_dim,num_classes,
+               sample_weight_mode=None):
+    # expected input data shape: (batch_size, timesteps, data_dim)
+    model = Sequential()
+    model.add(Dense(50, input_dim=data_dim,activation='relu'))
+    model.add(Dense(50, activation='relu'))
+    model.add(Dense(50, activation='relu'))
+    model.add(Dense(num_classes, activation='softmax'))
+    model.compile(loss='categorical_crossentropy',
+                       optimizer='rmsprop',
+                       metrics=['accuracy'],
+                       sample_weight_mode=sample_weight_mode)
+    return model
+
+
 
 class SeqGen(Sequence):
     def __init__(self, x_set, y_set, batch_size, window_size, batch_stride=1,
