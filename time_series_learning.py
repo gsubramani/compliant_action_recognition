@@ -38,6 +38,16 @@ label_map = {
     }
 
 
+def upsample_labels(subsampled_labels, subsampled_timestamps, timestamps):
+    subsampled_timestamps = np.array(subsampled_timestamps)
+    timestamps = np.array(timestamps)
+    multiplier = (len(subsampled_timestamps) - 1) / (max(subsampled_timestamps) - min(subsampled_timestamps)).astype(
+        float)
+    ids = np.floor((timestamps - min(timestamps)) * multiplier).astype(int)
+    ids[ids >= len(subsampled_labels)] = len(subsampled_labels) - 1
+
+    return [subsampled_labels[ii] for ii in ids]
+
 def relabel_data(training_data_,label_map):
     training_data_relabeled = deepcopy(training_data_)
     for example in training_data_relabeled:

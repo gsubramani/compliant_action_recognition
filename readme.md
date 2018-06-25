@@ -1,8 +1,12 @@
 Compliant Action Recognition
 ============================
+1. TODOS:
+* check compliant_action_recognition.py
 
 
-1. TODO: compliant_action_recognition.py
+
+
+1. compliant_action_recognition.py
 * contains classes that incorporate training of models with labeled data
 as an input format. To replace the following files.
 

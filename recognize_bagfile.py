@@ -7,26 +7,13 @@ import matplotlib.pyplot as plt
 from plot_generator import plotResult_colorbars
 import pandas as pd
 from time_series_learning import get_signal_features,LSTM_model,SeqGen,sortify,get_wavelet_features,MLP_model
+from time_series_learning import upsample_labels
 from keras.models import load_model
 import cPickle as pickle
 
 
 
 
-
-
-__doc__ = "Adds bag files to the database. Used to create training data for detecting compliant actions "
-
-
-def upsample_labels(subsampled_labels, subsampled_timestamps, timestamps):
-    subsampled_timestamps = np.array(subsampled_timestamps)
-    timestamps = np.array(timestamps)
-    multiplier = (len(subsampled_timestamps) - 1) / (max(subsampled_timestamps) - min(subsampled_timestamps)).astype(
-        float)
-    ids = np.floor((timestamps - min(timestamps)) * multiplier).astype(int)
-    ids[ids >= len(subsampled_labels)] = len(subsampled_labels) - 1
-
-    return [subsampled_labels[ii] for ii in ids]
 
 def recognize_ld(ld):
     data = [ld]
