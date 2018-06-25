@@ -330,8 +330,14 @@ if __name__ == "__main__":
 
     data = load_db('grab_objects', path='./')
     car = CompliantActionRecognition(data)
-    car.train_LSTM_wavelet([0],epochs = 1)
-    car.train_LSTM([0],epochs = 1)
-    car.save_trained_models(folder = "./trained_models/test/")
+    # car.train_LSTM_wavelet([0],epochs = 1)
+    # car.train_LSTM([0],epochs = 1)
+    # car.save_trained_models(folder = "./trained_models/test/")
     car.load_from_folder(folder = "./trained_models/test/")
-    print car.predict_combined(0)
+    predictions = car.predict_combined(0)
+    plt.figure(1)
+    ax = plt.subplot(1,1,1)
+    plotResult_colorbars(predictions, range(len(predictions)),
+                         labelNames=list(car.md.label_names_df) + [''], ax=ax, medfiltwidth=1)
+
+    plt.show()
