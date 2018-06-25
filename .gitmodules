@@ -1,5 +1,6 @@
 [submodule "bagfile_io"]
 	path = bagfile_io
+	branch = bagfile_io_compliant_action_recognition
 	url = git@github.com:gsubramani/bagfile_io.git
 [submodule "signal_database"]
 	path = signal_database
