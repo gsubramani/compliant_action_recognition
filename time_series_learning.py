@@ -1,9 +1,8 @@
 
 from copy import deepcopy
 
-from label_manipulation import fill_closest
+from backup.label_manipulation import fill_closest
 from SignalRecognition.cwt_learner.wavelet_feature_engineering import CWT_learner
-import tensorflow as tf
 from keras.layers import LSTM
 from keras.models import Sequential
 from keras.layers import Dense
@@ -11,7 +10,7 @@ from keras.layers import Dense
 from keras.utils import Sequence
 import numpy as np
 from signal_database.labelSelectedData import SignalDB, SignalBundle
-from bagfile_io.bagfile_reader import bagfile_reader,write_to_bagfile
+from bagfile_io.bagfile_reader import bagfile_reader
 from signal_database.labelSelectedData import LabeledData
 
 def load_db(db_name,path = './'):
@@ -225,4 +224,5 @@ def bag_file_to_labeled_data(bagfile,label_topic = None):
     return ld
 
 def write_labels_to_bagfile(bagfile,label_topic_name):
+    #TODO
     pass

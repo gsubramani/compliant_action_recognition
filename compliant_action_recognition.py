@@ -211,7 +211,7 @@ class CompliantActionRecognition():
         X = np.append(X_signal,X_wavelet,axis = 1)
         skip = self.md.LSTM_wavelet_skip
         timestamps = self.data[id].signal_bundle.timestamps
-        sg = SeqGen(X[0:-1:skip], timestamps[0:-1:skip], 1, self.md.LSTM_wavelet_window,
+        sg = SeqGen(X[0:-1:skip], timestamps[0:-1:skip], self.md.LSTM_wavelet_batch_size, self.md.LSTM_wavelet_window,
                     batch_stride=self.md.LSTM_wavelet_batch_stride)
 
         predictions = np.array([]).reshape(0,len(self.md.label_names_df))
