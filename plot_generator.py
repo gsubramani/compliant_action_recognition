@@ -56,6 +56,29 @@ def get_color_map(labelNames):
     color_map_rgba[labelNames.index('')] = [1,1,1,1]
     return color_map_rgba
 
+
+def plot_legend(label_names,ax = None):
+    if ax is None:
+        plt.figure()
+        ax = plt.subplot(1,1,1)
+
+    if '' not in label_names : label_names = label_names + ['']
+
+    color_map = get_color_map(label_names)
+
+    starts = range(len(label_names))
+    stops = range(1,len(label_names) + 1)
+
+    for color,start,stop in zip(color_map,starts,stops):
+        ax.axvspan(start, stop, alpha=1, color=color)
+    for start in starts:
+        ax.axvline(start, linewidth=1, color='k')
+    ax.axvline(len(label_names), linewidth=1, color='k')
+    for id,label in enumerate(label_names):
+        ax.text(id + 0.5, 0.5, label, fontsize=12,horizontalalignment='center')
+    return ax
+
+
 def plotResult_colorbars(testPredict,
                          timestamps,ax = None,
                          labelNames = [],

@@ -3,7 +3,8 @@ Compliant Action Recognition
 1. TODOS:
 * check compliant_action_recognition.py
 
-
+ALL THE FILES HAVE CHANGED!
+---------------------------
 
 
 1. compliant_action_recognition.py

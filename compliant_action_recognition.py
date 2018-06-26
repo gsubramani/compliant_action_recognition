@@ -53,7 +53,7 @@ class CompliantActionRecognition():
         if label_names is None: self.md.label_names_df = None
         else: self.md.label_names_df = label_names
 
-        self.data = relabel_data(data, self.label_map)
+        self.data = relabel_data(self.data, self.label_map)
 
         self.md.LSTM_wavelet_trained = False
         self.md.LSTM_trained = False
@@ -77,7 +77,7 @@ class CompliantActionRecognition():
         self.md.LSTM_wavelet_batch_stride = batch_stride
         self.md.LSTM_wavelet_window = window
 
-        training_data = [data[id] for id in ids]
+        training_data = [self.data[id] for id in ids]
         trainX_signal,trainY = get_signal_features(training_data)
 
         if not self.wavelet_tf_train_completed:
@@ -114,7 +114,7 @@ class CompliantActionRecognition():
         if valid_ids is None:
             self.model_LSTM_wavelet.fit_generator(sg_train, epochs=epochs, callbacks=[tb])
         else:
-            validation_data = [data[id] for id in valid_ids]
+            validation_data = [self.data[id] for id in valid_ids]
             validationX_signal, validationY = get_signal_features(validation_data)
             if not self.wavelet_tf_validation_completed:
                 self.validationX_wavelet, _ = get_wavelet_features(validation_data, features=features)
@@ -150,7 +150,7 @@ class CompliantActionRecognition():
         self.md.LSTM_batch_stride = batch_stride
         self.md.LSTM_window = window
 
-        training_data = [data[id] for id in ids]
+        training_data = [self.data[id] for id in ids]
         trainX_signal,trainY = get_signal_features(training_data)
 
         trainX = trainX_signal
@@ -182,7 +182,7 @@ class CompliantActionRecognition():
         if valid_ids is None:
             self.model_LSTM.fit_generator(sg_train, epochs=epochs, callbacks=[tb])
         else:
-            validation_data = [data[id] for id in valid_ids]
+            validation_data = [self.data[id] for id in valid_ids]
             validationX_signal, validationY = get_signal_features(validation_data)
 
             validation_sample_weights = compute_sample_weight('balanced', validationY)
@@ -203,16 +203,14 @@ class CompliantActionRecognition():
         self.md.LSTM_trained = True
         print "Trained LSTM model!"
 
-    # def predict_LSTM(self,ids):
-    #     test_data = [data[id] for id in ids]
 
     def predict_LSTM_wavelet(self,id):
-        test_data = [data[id]]
+        test_data = [self.data[id]]
         X_signal,_ = get_signal_features(test_data)
         X_wavelet, _ = get_wavelet_features(test_data,features=self.md.LSTM_wavelet_features)
         X = np.append(X_signal,X_wavelet,axis = 1)
         skip = self.md.LSTM_wavelet_skip
-        timestamps = data[id].signal_bundle.timestamps
+        timestamps = self.data[id].signal_bundle.timestamps
         sg = SeqGen(X[0:-1:skip], timestamps[0:-1:skip], 1, self.md.LSTM_wavelet_window,
                     batch_stride=self.md.LSTM_wavelet_batch_stride)
 
@@ -242,11 +240,11 @@ class CompliantActionRecognition():
         X = X_signal
 
         skip = self.md.LSTM_skip
-        timestamps = data[id].signal_bundle.timestamps
+        timestamps = self.data[id].signal_bundle.timestamps
         window = self.md.LSTM_window
         batch_stride = self.md.LSTM_batch_stride
         batch_size = self.md.LSTM_batch_size
-        sg = SeqGen(X[0:-1:skip], timestamps[0:-1:skip], 1, window, batch_stride=batch_stride)
+        sg = SeqGen(X[0:-1:skip], timestamps[0:-1:skip], batch_size, window, batch_stride=batch_stride)
 
         predictions = np.array([]).reshape(0, len(self.md.label_names_df))
         predictions_timestamps = np.array([])
