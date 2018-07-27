@@ -1,16 +1,9 @@
-# from labelSelectedData import LabeledData, SignalBundle
-# from morlet_feature_transfrom import MorletFeatureTransform
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm
 import matplotlib.colors
 
 from scipy.signal import medfilt
-import collections
-#from os.path import isfile,join
-#from os import listdir
-from scipy import signal
-from copy import deepcopy
 import matplotlib.patches as patches
 color_map = "Paired"
 

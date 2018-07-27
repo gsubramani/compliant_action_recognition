@@ -1,7 +1,6 @@
 
 from copy import deepcopy
 
-from backup.label_manipulation import fill_closest
 from SignalRecognition.cwt_learner.wavelet_feature_engineering import CWT_learner
 from keras.layers import LSTM
 from keras.models import Sequential
@@ -12,6 +11,8 @@ import numpy as np
 from signal_database.labelSelectedData import SignalDB, SignalBundle
 from bagfile_io.bagfile_reader import bagfile_reader
 from signal_database.labelSelectedData import LabeledData
+from scipy.signal import medfilt
+from scipy.interpolate import interp1d
 
 def load_db(db_name,path = './'):
 
@@ -214,11 +215,13 @@ def bag_file_to_labeled_data(bagfile,label_topic = None):
     sb = SignalBundle(data, timesamples)
     ld = LabeledData(sb)
     try:
-        if label_topic is not None:
-            labels_,labelst = bfr.get_topic_msgs("/labels")
-            labels = [label_messsage.data for label_messsage in labels_]
-            labels = upsample_labels(labels,labelst,timesamples)
-            ld.labels = labels
+        if label_topic is None:
+            label_topic = "/labels"
+
+        labels_,labelst = bfr.get_topic_msgs(label_topic)
+        labels = [label_messsage.data for label_messsage in labels_]
+        labels = upsample_labels(labels,labelst,timesamples)
+        ld.labels = labels
     except:
         print "There are possibly no labels in the bagfile. "
     return ld
@@ -226,3 +229,35 @@ def bag_file_to_labeled_data(bagfile,label_topic = None):
 def write_labels_to_bagfile(bagfile,label_topic_name):
     #TODO
     pass
+
+
+def median_filter_labels(labels,window):
+
+    if window%2 == 0:
+        window = window = 1
+    label_names_uniques,labels_ints = np.unique(labels,return_inverse=True)
+    labels_ints_filtered = medfilt(labels_ints,1001)
+    filtered_labels = [label_names_uniques[int(val)] for val in labels_ints_filtered]
+    return filtered_labels
+
+def fill_closest(labels,replace = ""):
+    unknown_samples = [ii for ii,label in enumerate(labels) if label == replace]
+    known_samples = [ii for ii,label in enumerate(labels) if label != replace]
+    known_labels = [label for ii,label in enumerate(labels) if label != replace]
+    label_names_uniques,known_labels_ids = np.unique(known_labels,return_inverse=True)
+    f1 = interp1d(known_samples, known_labels_ids, kind='nearest',fill_value='extrapolate')
+    unknown_labels_close_enough_ids = f1(unknown_samples)
+    unknown_labels_close_enough = [label_names_uniques[int(label_id)] for label_id in unknown_labels_close_enough_ids]
+    current_id = 0
+    pl1 = 0
+    pl2 = 0
+    out_list = []
+    for ii in range(len(labels)):
+        if unknown_samples[pl1] == current_id:
+            out_list.append(unknown_labels_close_enough[pl1])
+            pl1 += 1
+        else:
+            out_list.append(known_labels[pl2])
+            pl2 +=1
+        current_id += 1
+    return out_list
